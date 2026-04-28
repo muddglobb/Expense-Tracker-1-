@@ -21,6 +21,9 @@ export default function RegisterPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: 'https://expense-tracker-1-eight.vercel.app/',
+      },
     })
 
     if (error) {

@@ -21,8 +21,16 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession()
-      
+      handleSession(session)
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      handleSession(session)
+    })
+
+    const handleSession = async (session: any) => {
       if (!session) {
+        setUser(null)
         if (!pathname.startsWith('/login') && !pathname.startsWith('/register')) {
           router.push('/login')
         }
@@ -52,6 +60,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     checkUser()
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [pathname, router])
 
   const handleVerifyPin = (e: React.FormEvent) => {
