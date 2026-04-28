@@ -68,7 +68,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   const handleSetupPin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (pinInput.length < 4) return
+    if (pinInput.length < 4 || !user) return
 
     const { error } = await supabase
       .from('profiles')
